@@ -6,7 +6,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class StadiumResource extends JsonResource
 {
-    public static $wrap = 'stadium';
 
     /**
      * Transform the resource into an array.
@@ -19,7 +18,7 @@ class StadiumResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'firm_id' => $this->firm_id,
+//            'firm_id' => $this->firm_id,
             'description' => $this->description,
             'opening_time' => $this->opening_time,
             'closing_time' => $this->closing_time,
@@ -29,8 +28,9 @@ class StadiumResource extends JsonResource
             'daytime_price' => $this->daytime_price,
             'nighttime_price' => $this->nighttime_price,
             'recording' => $this->recording,
+            'firm' => FirmResource::make($this->whenLoaded('firm')),
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
             'created_at' => (string)$this->created_at,
-            'updated_at' => (string)$this->updated_at,
         ];
     }
 

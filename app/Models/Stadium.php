@@ -10,4 +10,14 @@ class Stadium extends Model
     protected $guarded = [];
     protected $hidden = [];
     use HasFactory;
+
+    public function firm()
+    {
+        return $this->belongsTo(Firm::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
