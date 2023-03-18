@@ -17,6 +17,7 @@ class StadiumResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'firm_id' => $this->firm_id,
             'description' => $this->description,
