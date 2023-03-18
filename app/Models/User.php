@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\MustVerifyMobile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Interfaces\MustVerifyMobile as IMustVerifyMobile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +13,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements IMustVerifyMobile
 {
     use HasApiTokens;
     use HasFactory;
@@ -26,7 +27,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'phone',
         'mobile_number',
         'mobile_verified_at',
         'mobile_verify_code',
@@ -40,12 +40,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'mobile_verify_code',
         'two_factor_recovery_codes',
         'two_factor_secret',
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'number_verified_at' => 'datetime',
+        'mobile_verify_code_sent_at' => 'datetime',
+        'mobile_last_attempt_date' => 'datetime'
     ];
 
     protected $appends = [

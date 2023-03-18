@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StadiumController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Api\V1\Auth;
@@ -24,4 +25,6 @@ Route::middleware(['cors'])->group(function () {
         Route::put('password', Auth\PasswordUpdateController::class);
         Route::post('auth/logout', Auth\LogoutController::class);
     });
+
+    Route::apiResource('stadiums', StadiumController::class);
 });
