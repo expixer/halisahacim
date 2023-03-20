@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('firm_id');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->time('opening_time');
             $table->time('closing_time');
             $table->time('daytime_start');

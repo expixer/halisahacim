@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\StadiumRequest;
+use App\Http\Resources\FirmResource;
 use App\Http\Resources\StadiumCollection;
 use App\Http\Resources\StadiumResource;
+use App\Models\Firm;
 use App\Models\Stadium;
 use Illuminate\Http\Request;
 
@@ -17,10 +19,7 @@ class StadiumController extends Controller
      */
     public function index()
     {
-        return new StadiumCollection(
-            new StadiumResource(Stadium::all())
-        );
-
+        return new StadiumCollection(Stadium::with(['firm', 'comments'])->paginate());
     }
 
     /**

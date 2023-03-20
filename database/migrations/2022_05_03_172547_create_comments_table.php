@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
+            $table->foreignId('stadium_id');
+            $table->string('comment')->nullable();
+            $table->string('rating')->nullable();
+            $table->tinyInteger('status')->default(1);
+            $table->string('image');
             $table->timestamps();
         });
     }
@@ -26,6 +32,10 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::table('comments', function (Blueprint $table){
+            $table->dropConstrainedForeignId('user_id');
+            $table->dropConstrainedForeignId('stadium_id');
+        });
         Schema::dropIfExists('comments');
     }
 };
