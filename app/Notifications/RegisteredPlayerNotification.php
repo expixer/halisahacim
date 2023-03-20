@@ -35,7 +35,7 @@ class RegisteredPlayerNotification extends Notification implements ShouldQueue
     {
         $channels = ['mail'];
 
-        $channels[] = 'vonage';
+        // $channels[] = 'vonage';
 /*        if ($notifiable->routes[NetgsmChannel::class]) {
             $channels[] = NetgsmChannel::class;
         }*/

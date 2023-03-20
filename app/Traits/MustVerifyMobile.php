@@ -11,6 +11,11 @@ trait MustVerifyMobile
         return ! is_null($this->mobile_verified_at);
     }
 
+    public function verifyMobileCode($code = null): bool
+    {
+        return $code == $this->mobile_verify_code;
+    }
+
     public function markMobileAsVerified(): bool
     {
         return $this->forceFill([

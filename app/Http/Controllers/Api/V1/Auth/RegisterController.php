@@ -40,4 +40,6 @@ class RegisterController extends Controller
             'access_token' => $user->createToken($device)->plainTextToken,
         ], 201);
     }
+
+
 }

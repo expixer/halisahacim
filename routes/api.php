@@ -24,6 +24,8 @@ Route::middleware(['cors'])->group(function () {
         Route::put('password', Auth\PasswordUpdateController::class);
         Route::post('auth/logout', Auth\LogoutController::class);
         Route::apiResource('stadiums', V1\StadiumController::class);
+        Route::post('verify-mobile-code', [Auth\VerifyMobileController::class, 'verifyMobileCode']);
+        Route::get('check-mobile-code', [Auth\VerifyMobileController::class, 'checkVerifyCode']);
     });
 
 });

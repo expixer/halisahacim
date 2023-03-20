@@ -14,7 +14,7 @@ class SendVerifySMS extends Notification
 
     public function via($notifiable): array
     {
-        return ['vonage'];
+        return [];
     }
 
     public function toVonage($notifiable): VonageMessage
