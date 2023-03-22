@@ -10,36 +10,50 @@ use Illuminate\Support\Facades\Auth;
 class VerifyMobileController extends Controller
 {
 
-    public function verifyMobileCode(Request $request)
+    public function verifyMobileCode(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $request->validate([
             'code' => ['required', 'numeric'],
         ]);
 
-        // Code correct
-        if ($request->user()->verifyMobileCode()) {
-                $request->user()->markMobileAsVerified();
-                return response()->json([
-                    'status' => true,
-                ]);
-        }else{
+        // Already verified
+        if ($request->user()->hasVerifiedMobile()) {
             return response()->json([
                 'status' => false,
-            ], 401);
+                'message' => 'Telefon numarası zaten onaylanmış'
+            ], 400);
         }
+
+        // Code wrong
+        if (!$request->user()->verifyMobileCode($request->code)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Telefon numarası kodu yanlış'
+            ], 400);
+        }
+
+        // Code correct
+        $request->user()->markMobileAsVerified();
+        return response()->json([
+            'status' => true,
+            'message' => 'Telefon numarası başarıyla onaylandı'
+        ]);
+
     }
 
-    public function checkVerifyCode(Request $request)
+    public function resendVerifyCode(Request $request): \Illuminate\Http\JsonResponse
     {
-        $secondsOfValidation = (int) config('mobile.seconds_of_validation');
-        if ($secondsOfValidation > 0
-            &&  $request->user()->mobile_verify_code_sent_at->diffInSeconds() > $secondsOfValidation
-            && $request->user()->mobile_verify_code == $request->code) {
+        $secondsOfValidation = (int)config('mobile.seconds_of_validation');
+
+        // hakkı varsa
+        if (config('mobile.max_attempts') > 0
+            && $secondsOfValidation > 0
+            && $request->user()->mobile_verify_code_sent_at->diffInSeconds() > $secondsOfValidation) {
             return response()->json([
-               'status' => true
+                'status' => true
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => false,
                 'validation_seconds' => $secondsOfValidation,

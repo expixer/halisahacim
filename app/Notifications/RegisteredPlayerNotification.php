@@ -40,7 +40,7 @@ class RegisteredPlayerNotification extends Notification implements ShouldQueue
             $channels[] = NetgsmChannel::class;
         }*/
 
-        return $channels;
+        return [];
     }
 
     /**

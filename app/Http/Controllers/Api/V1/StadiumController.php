@@ -49,8 +49,9 @@ class StadiumController extends Controller
      * @param Stadium $stadium
      * @return StadiumResource
      */
-    public function show(Stadium $stadium)
+    public function show($stadium)
     {
+        $stadium = Stadium::with(['firm', 'comments'])->find($stadium);
         return new StadiumResource($stadium);
     }
 
