@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('notes');
             $table->string('phone');
             $table->string('email');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

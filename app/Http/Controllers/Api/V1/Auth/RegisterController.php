@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Http\Controllers\Api\V1\Controller;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\RegisteredPlayerNotification;
 use Illuminate\Auth\Events\Registered;

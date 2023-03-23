@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StadiumRequest;
-use App\Http\Resources\FirmResource;
 use App\Http\Resources\StadiumCollection;
 use App\Http\Resources\StadiumResource;
-use App\Models\Firm;
 use App\Models\Stadium;
 use Illuminate\Http\Request;
 

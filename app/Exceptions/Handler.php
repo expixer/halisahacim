@@ -54,6 +54,7 @@ class Handler extends ExceptionHandler
             if ($exception instanceof ModelNotFoundException) {
                 return response()->json([
                     'message' => 'Kayıt Bulunamadı',
+                    'error' => $exception->getMessage(),
                 ], 404);
             }
 

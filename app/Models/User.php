@@ -65,4 +65,9 @@ class User extends Authenticatable implements IMustVerifyMobile
     {
         return $this->mobile_number;
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }
