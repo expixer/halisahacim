@@ -17,9 +17,21 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('stadium_id');
-            $table->timestamp('match_date');
+            $table->date('match_date');
+            $table->time('match_time');
+            $table->string('match_type');
+            $table->string('match_duration');
+            $table->string('match_team');
+            $table->string('match_team2');
             $table->unsignedDouble('price');
-            $table->boolean('status');
+            $table->string('payment_method');
+            $table->string('payment_status');
+            $table->string('payment_id');
+            $table->string('payment_url');
+            $table->string('status');
+            $table->string('notes');
+            $table->string('phone');
+            $table->string('email');
             $table->timestamps();
         });
     }
