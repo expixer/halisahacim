@@ -40,6 +40,11 @@ class Stadium extends Model
         return $this->hasMany(Reservation::class);
     }
 
+    public function favoriteStadiums()
+    {
+        return $this->hasMany(FavoriteStadium::class);
+    }
+
     //$date format: 2021-05-03
     public function getAvailableHours($date = null)
     {

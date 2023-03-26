@@ -70,4 +70,9 @@ class User extends Authenticatable implements IMustVerifyMobile
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function favoriteStadiums()
+    {
+        return $this->hasMany(FavoriteStadium::class);
+    }
 }
