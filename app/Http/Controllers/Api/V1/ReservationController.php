@@ -63,8 +63,26 @@ class ReservationController extends Controller
 
     public function getAvailableHours(Request $request)
     {
+        $request->validate([
+            'id' => 'required|exists:stadia,id',
+            'date' => 'required|date',
+        ]);
+
         $stadium = Stadium::find($request->id);
 
-        return $stadium->getAvailableHours($request->date);
+        return $stadium->getAvailableHours($request->date, $request->duration);
+    }
+
+    public function getAvailableHoursForDuration(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:stadia,id',
+            'date' => 'required|date',
+            'duration' => 'required|integer|min:1|max:15',
+        ]);
+
+        $stadium = Stadium::find($request->id);
+
+        return $stadium->getAvailableHoursForDuration($request->date, $request->duration);
     }
 }

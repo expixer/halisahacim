@@ -40,33 +40,80 @@ class Stadium extends Model
         return $this->hasMany(Reservation::class);
     }
 
+    //$date format: 2021-05-03
     public function getAvailableHours($date = null)
     {
-        $saatler = array();
-        $date = $date ?? Carbon::now()->format('Y-m-d');
-        $start_time = Carbon::createFromFormat('H:i:s', $this->opening_time)->setMinute(0)->setSecond(0);
-        $end_time = Carbon::createFromFormat('H:i:s', $this->closing_time)->setMinute(0)->setSecond(0);
+        $availableHours = array();
+        $date = Carbon::createFromFormat('Y-m-d', $date) ?? Carbon::now();
+        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $date->format('Y-m-d') . ' ' . $this->opening_time)->setMinute(0)->setSecond(0);
+        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $date->format('Y-m-d') . ' ' . $this->closing_time)->setMinute(0)->setSecond(0);
 
-        if ($start_time > $end_time) {
-            $end_time->addDay();
+        if ($startTime > $endTime) {
+            $endTime->addDay();
         }
 
-        while ($start_time <= $end_time) {
-            $saat = array(
-                "saat" => $start_time->format('H:i'),
+        $startTimeForloop = $startTime->copy();
+        while ($startTimeForloop <= $endTime) {
+            $hour = array(
+                "saat" => $startTimeForloop->format('H:i'),
                 "durum" => "bos"
             );
-            $saatler[] = $saat;
-            $start_time->addHour();
+
+            $hour['fiyat'] = $this->daytime_price; //$this->setProperPrice($start_time);
+
+
+            if (!$startTimeForloop->lt($date->copy()->setHour(24)->setMinute(59)->setSecond(59))) {
+                $hour['zaman'] = 'ertesi gun';
+            }else{
+                $hour['zaman'] = 'bugun';
+            }
+
+            if ($startTimeForloop < $date->copy()->addMinutes(30)) {
+                $hour['durum'] = 'gecmis';
+            }
+            $availableHours[] = $hour;
+            $startTimeForloop->addHour();
         }
 
-        $saatler = array_map(function ($saat) use ($date) {
-            if (Reservation::where('stadium_id', $this->id)->where('match_date', $date)->where('match_time', $saat['saat'])->exists()) {
+        $availableHours = array_map(function ($saat) use ($date) {
+            if (Reservation::where('stadium_id', $this->id)->where('match_date', $date->format('Y-m-d'))->where('match_time', $saat['saat'])->exists()) {
                 $saat['durum'] = 'dolu';
             }
             return $saat;
-        }, $saatler);
+        }, $availableHours);
 
-        return json_encode($saatler);
+        return json_encode($availableHours);
+    }
+
+    //$duration: gün sayısı
+    public function getAvailableHoursForDuration($date = null, $duration = 7)
+    {
+        $availableHours = array();
+        $startDate = Carbon::createFromFormat('Y-m-d', $date) ?? Carbon::now();
+
+        for ($i = 0; $i < $duration; $i++) {
+            $currentDate = $startDate->copy()->addDays($i);
+            $hours = $this->getAvailableHours($currentDate->format('Y-m-d'));
+            $availableHours[] = array(
+                'gun' => $currentDate->format('Y-m-d'),
+                'saatler' => json_decode($hours),
+            );
+        }
+
+        return json_encode($availableHours);
+    }
+
+    //gündüz veya gece tarifesine göre fiyatı ayarlar
+    //todo: düzeltilmeli
+    public function setProperPrice($date)
+    {
+        if ($date->format('H:i') >= $this->daytime_start && $date->format('H:i') < $this->nighttime_start) {
+            $price = $this->daytime_price;
+        } elseif ($date->format('H:i') >= $this->nighttime_start && $date->format('H:i') < $this->nighttime_end) {
+            $price = $this->nighttime_price;
+        } else {
+            $price = $this->daytime_price;
+        }
+        return $price;
     }
 }

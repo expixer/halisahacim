@@ -29,6 +29,7 @@ Route::middleware(['cors'])->group(function () {
         Route::middleware(['verify.mobile'])->group(function () {
             Route::apiResource('stadiums', V1\StadiumController::class);
             Route::get('reservations/get-available', [V1\ReservationController::class, 'getAvailableHours']);
+            Route::get('reservations/get-available-duration', [V1\ReservationController::class, 'getAvailableHoursForDuration']);
             Route::apiResource('reservations', V1\ReservationController::class);
             /* Route::get('reservations/{reservation}/cancel', [V1\ReservationController::class, 'cancel']);
             Route::get('reservations/{reservation}/approve', [V1\ReservationController::class, 'approve']);
