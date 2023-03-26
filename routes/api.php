@@ -31,6 +31,7 @@ Route::middleware(['cors'])->group(function () {
             Route::get('reservations/get-available', [V1\ReservationController::class, 'getAvailableHours']);
             Route::get('reservations/get-available-duration', [V1\ReservationController::class, 'getAvailableHoursForDuration']);
             Route::apiResource('reservations', V1\ReservationController::class);
+            Route::apiResource('favorites', V1\FavoriteStadiumController::class);
             /* Route::get('reservations/{reservation}/cancel', [V1\ReservationController::class, 'cancel']);
             Route::get('reservations/{reservation}/approve', [V1\ReservationController::class, 'approve']);
             Route::get('reservations/{reservation}/reject', [V1\ReservationController::class, 'reject']);
