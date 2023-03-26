@@ -68,7 +68,7 @@ class Stadium extends Model
                 $hour['zaman'] = 'bugun';
             }
 
-            if ($startTimeForloop < $date->copy()->addMinutes(30)) {
+            if ($startTimeForloop < Carbon::now()->addMinutes(30)) {
                 $hour['durum'] = 'gecmis';
             }
             $availableHours[] = $hour;
