@@ -30,6 +30,7 @@ class StadiumResource extends JsonResource
             'recording' => $this->recording,
             'firm' => FirmResource::make($this->whenLoaded('firm')),
             'comments' => CommentResource::collection($this->whenLoaded('comments')),
+            'is_favorite' => $this->favoriteStadiums()->where('user_id', auth()->id())->exists(),
             'created_at' => (string)$this->created_at,
         ];
     }

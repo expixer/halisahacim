@@ -67,7 +67,7 @@ class Stadium extends Model
             $hour['fiyat'] = $this->daytime_price; //$this->setProperPrice($start_time);
 
 
-            if (!$startTimeForloop->lt($date->copy()->setHour(24)->setMinute(59)->setSecond(59))) {
+            if (!$startTimeForloop->lt($date->copy()->setHour(24)->setMinute(0)->setSecond(0))) {
                 $hour['zaman'] = 'ertesi gun';
             }else{
                 $hour['zaman'] = 'bugun';

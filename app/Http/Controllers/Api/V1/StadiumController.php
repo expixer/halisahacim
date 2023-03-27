@@ -18,7 +18,7 @@ class StadiumController extends Controller
      */
     public function index()
     {
-        return new StadiumCollection(Stadium::with(['firm', 'comments'])->paginate());
+        return new StadiumCollection(Stadium::with(['firm', 'comments', 'favoriteStadiums'])->paginate());
     }
 
     /**
@@ -50,7 +50,7 @@ class StadiumController extends Controller
      */
     public function show($stadium)
     {
-        $stadium = Stadium::with(['firm', 'comments'])->find($stadium);
+        $stadium = Stadium::with(['firm', 'comments', 'favoriteStadiums'])->find($stadium);
         return new StadiumResource($stadium);
     }
 

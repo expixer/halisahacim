@@ -14,17 +14,21 @@ class FavoriteStadiumController extends Controller
 
     public function store()
     {
-        $data = request();
+        $data = request()->validate(
+            [
+                'stadium_id' => 'required|exists:stadia,id',
+            ]
+        );
         //$favorites = auth()->user()->favoriteStadiums()->findOrFail(request());
         $favorites = auth()->user()->favoriteStadiums()->create($data);
 
         return $favorites;
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $favorites = auth()->user()->favoriteStadiums()->findOrFail($id);
-        if($favorites){
+        if ($favorites) {
             $favorites->delete();
         }
 
