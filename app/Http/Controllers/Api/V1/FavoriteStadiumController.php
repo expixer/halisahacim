@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FavoriteStadiumController extends Controller
 {
@@ -27,9 +28,11 @@ class FavoriteStadiumController extends Controller
 
     public function destroy($id)
     {
-        $favorites = auth()->user()->favoriteStadiums()->findOrFail($id);
-            $favorites->delete();
+        $favorites = auth()->user()->favoriteStadiums()->where('user_id', auth()->user()->id)->
+        where('stadium_id', $id)->firstOrFail();
 
-            return response()->json(null, 204);
+        $favorites->delete();
+
+        return response()->json(null, 204);
     }
 }
