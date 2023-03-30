@@ -15,6 +15,7 @@ class StadiumResource extends JsonResource
      */
     public function toArray($request)
     {
+        $favorite = $this->favoriteStadiums()->where('user_id', auth()->id());
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -30,7 +31,8 @@ class StadiumResource extends JsonResource
             'recording' => $this->recording,
             'firm' => FirmResource::make($this->whenLoaded('firm')),
             'comments' => CommentResource::collection($this->whenLoaded('comments')),
-            'is_favorite' => $this->favoriteStadiums()->where('user_id', auth()->id())->exists(),
+            'is_favorite' => $favorite->exists(),
+            'favorite_id' => $favorite->exists() ? $favorite->first()->id : 0,
             'created_at' => (string)$this->created_at,
         ];
     }

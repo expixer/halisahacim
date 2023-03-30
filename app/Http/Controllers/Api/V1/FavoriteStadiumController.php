@@ -28,10 +28,8 @@ class FavoriteStadiumController extends Controller
     public function destroy($id)
     {
         $favorites = auth()->user()->favoriteStadiums()->findOrFail($id);
-        if ($favorites) {
             $favorites->delete();
-        }
 
-        return response()->json(null, 204);
+            return response()->json(null, 204);
     }
 }
