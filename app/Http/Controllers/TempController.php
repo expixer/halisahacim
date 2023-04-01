@@ -9,8 +9,7 @@ class TempController extends Controller
 {
     public function gitpull()
     {
-        $process = Process::run('git pull');
-        return response($process->output());
-
+        $output = shell_exec('cd .. && git pull');
+        echo "<pre>$output</pre>";
     }
 }
