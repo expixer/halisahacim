@@ -38,7 +38,7 @@ class RegisterController extends Controller
 
         return response()->json([
             'access_token' => $user->createToken($device)->plainTextToken,
-            'is_mobile_verified' => $user->is_mobile_verified,
+            'is_mobile_verified' => $user->hasVerifiedMobile(),
         ], 201);
     }
 
