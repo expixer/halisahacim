@@ -28,8 +28,12 @@ class FavoriteStadiumController extends Controller
 
     public function destroy($id)
     {
-        $favorites = auth()->user()->favoriteStadiums()->where('user_id', auth()->user()->id)->
-        where('stadium_id', $id)->firstOrFail();
+        $favorites = auth()
+            ->user()
+            ->favoriteStadiums()
+            ->where('user_id', auth()->user()->id)
+            ->where('stadium_id', $id)
+            ->firstOrFail();
 
         $favorites->delete();
 
