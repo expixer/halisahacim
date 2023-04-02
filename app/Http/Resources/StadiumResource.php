@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StadiumResource extends JsonResource
@@ -21,11 +22,11 @@ class StadiumResource extends JsonResource
             'name' => $this->name,
 //            'firm_id' => $this->firm_id,
             'description' => $this->description,
-            'opening_time' => $this->opening_time,
-            'closing_time' => $this->closing_time,
-            'daytime_start' => $this->daytime_start,
-            'nighttime_start' => $this->nighttime_start,
-            'nighttime_end' => $this->nighttime_end,
+            'opening_time' => $this->hourFormat($this->opening_time),
+            'closing_time' => $this->hourFormat($this->closing_time),
+            'daytime_start' => $this->hourFormat($this->daytime_start),
+            'nighttime_start' => $this->hourFormat($this->nighttime_start),
+            'nighttime_end' => $this->hourFormat($this->nighttime_end),
             'daytime_price' => $this->daytime_price,
             'nighttime_price' => $this->nighttime_price,
             'recording' => $this->recording,
@@ -35,6 +36,11 @@ class StadiumResource extends JsonResource
             'favorite_id' => $favorite->exists() ? $favorite->first()->id : 0,
             'created_at' => (string)$this->created_at,
         ];
+    }
+
+    private function hourFormat($hour)
+    {
+        return Carbon::createFromFormat('H:i:s', $hour)->format('H:i');
     }
 
     public function with($request)
