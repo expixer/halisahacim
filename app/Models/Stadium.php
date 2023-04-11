@@ -5,12 +5,23 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Stadium extends Model
 {
     protected $fillable = [
         'name',
         'firm_id',
+        'address',
+        'city',
+        'state',
+        'latitude',
+        'longitude',
+        'phone',
+        'email',
+        'website',
+        'facebook',
+        'instagram',
         'description',
         'opening_time',
         'closing_time',
@@ -43,6 +54,11 @@ class Stadium extends Model
     public function favoriteStadiums()
     {
         return $this->hasMany(FavoriteStadium::class);
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(Image::class, 'imageable');
     }
 
     //$date format: 2021-05-03

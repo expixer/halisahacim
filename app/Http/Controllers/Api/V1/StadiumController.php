@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StadiumRequest;
 use App\Http\Resources\StadiumCollection;
 use App\Http\Resources\StadiumResource;
+use App\Models\Image;
 use App\Models\Stadium;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,7 @@ class StadiumController extends Controller
      */
     public function index()
     {
-        return new StadiumCollection(Stadium::with(['firm', 'comments', 'favoriteStadiums'])->paginate());
+        return new StadiumCollection(Stadium::with(['firm', 'comments', 'favoriteStadiums', 'images'])->paginate());
     }
 
     /**
@@ -50,7 +51,7 @@ class StadiumController extends Controller
      */
     public function show($stadium)
     {
-        $stadium = Stadium::with(['firm', 'comments', 'favoriteStadiums'])->find($stadium);
+        $stadium = Stadium::with(['firm', 'comments', 'favoriteStadiums', 'images'])->find($stadium);
         return new StadiumResource($stadium);
     }
 
@@ -87,4 +88,5 @@ class StadiumController extends Controller
     {
         //
     }
+
 }

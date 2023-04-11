@@ -27,6 +27,7 @@ Route::middleware(['cors'])->group(function () {
         Route::post('auth/logout', Auth\LogoutController::class);
 
         Route::middleware(['verify.mobile'])->group(function () {
+            Route::apiResource('images', V1\ImageController::class);
             Route::apiResource('stadiums', V1\StadiumController::class);
             Route::get('reservations/get-available', [V1\ReservationController::class, 'getAvailableHours']);
             Route::get('reservations/get-available-duration', [V1\ReservationController::class, 'getAvailableHoursForDuration']);
