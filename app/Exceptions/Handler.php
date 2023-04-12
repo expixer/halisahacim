@@ -68,7 +68,7 @@ class Handler extends ExceptionHandler
 
             return response()->json([
                 'message' => 'Beklenmedik bir hata oluştu',
-                'error' => get_class($exception),
+                'error' => $exception->getMessage(),
             ], 500);
         }
 
