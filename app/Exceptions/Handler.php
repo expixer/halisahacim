@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use \Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
@@ -58,7 +59,7 @@ class Handler extends ExceptionHandler
                 ], 404);
             }
 
-            if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
+            if ($exception instanceof AuthenticationException) {
                 return response()->json([
                     'message' => 'Yetkisiz Erişim',
                     'error' => $exception->getMessage(),
