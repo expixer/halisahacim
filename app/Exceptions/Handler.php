@@ -58,9 +58,16 @@ class Handler extends ExceptionHandler
                 ], 404);
             }
 
+            if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
+                return response()->json([
+                    'message' => 'Yetkisiz Erişim',
+                    'error' => $exception->getMessage(),
+                ], 401);
+            }
+
             return response()->json([
                 'message' => 'Beklenmedik bir hata oluştu',
-                'error' => $exception->getMessage(),
+                'error' => get_class($exception),
             ], 500);
         }
 
