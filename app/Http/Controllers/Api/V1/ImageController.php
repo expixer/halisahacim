@@ -29,7 +29,7 @@ class ImageController extends Controller
         ]);
 
         $imageableType = Image::getImageableType($request->type);
-        $imagePath = $request->file('image')->store('images/' . $request->type, 'public');
+        $imagePath = $request->file('image')->storeAs('images/' . $request->type, $request->id . '-'. time() . '.jpg', 'public');
 
         $data = Image::create([
             'path' => $imagePath,
