@@ -12,4 +12,9 @@ class State extends Model
     protected $fillable = [
         'state_name',
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['cors'])->group(function () {
     Route::post('auth/register', Auth\RegisterController::class);
     Route::post('auth/login', Auth\LoginController::class);
+    Route::get('cities', [V1\CityController::class, 'index']);
+    Route::get('cities/{city}', [V1\StateController::class, 'index']);
 
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('verify-mobile-code', [Auth\VerifyMobileController::class, 'verifyMobileCode']);

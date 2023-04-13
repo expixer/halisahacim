@@ -12,4 +12,10 @@ class City extends Model
     protected $fillable = [
         'city_name',
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
 }

@@ -48,30 +48,30 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
     {
 
         if ($request->expectsJson()){
-            if ($exception instanceof ModelNotFoundException) {
+            if ($e instanceof ModelNotFoundException) {
                 return response()->json([
                     'message' => 'Kayıt Bulunamadı',
-                    'error' => $exception->getMessage(),
+                    'error' => $e->getMessage(),
                 ], 404);
             }
 
-            if ($exception instanceof AuthenticationException) {
+            if ($e instanceof AuthenticationException) {
                 return response()->json([
                     'message' => 'Yetkisiz Erişim',
-                    'error' => $exception->getMessage(),
+                    'error' => $e->getMessage(),
                 ], 401);
             }
 
             return response()->json([
                 'message' => 'Beklenmedik bir hata oluştu',
-                'error' => $exception->getMessage(),
+                'error' => $e->getMessage(),
             ], 500);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }
