@@ -24,6 +24,7 @@ Route::middleware(['cors'])->group(function () {
         Route::post('verify-mobile-code', [Auth\VerifyMobileController::class, 'verifyMobileCode']);
         Route::get('resend-mobile-code', [Auth\VerifyMobileController::class, 'resendVerifyCode']);
         Route::get('profile', [Auth\ProfileController::class, 'show']);
+        Route::get('getad', [Auth\ProfileController::class, 'getAddress']);
         Route::put('profile', [Auth\ProfileController::class, 'update']);
         Route::put('password', Auth\PasswordUpdateController::class);
         Route::post('auth/logout', Auth\LogoutController::class);

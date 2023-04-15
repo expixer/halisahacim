@@ -10,7 +10,7 @@ class ProfileController extends Controller
 {
     public function show(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json($request->user()->only('name', 'email'));
+        return response()->json($request->user()->with(['reservations', 'state', 'state.city'])->get());
     }
 
     public function update(Request $request): \Illuminate\Http\JsonResponse
@@ -23,5 +23,10 @@ class ProfileController extends Controller
         auth()->user()->update($validatedData);
 
         return response()->json($validatedData, 202);
+    }
+
+    public function getAddress(Request $request): \Illuminate\Http\JsonResponse
+    {
+        return response()->json($request->user()->state()->with('city')->first());
     }
 }

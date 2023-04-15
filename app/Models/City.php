@@ -18,4 +18,9 @@ class City extends Model
         'updated_at',
     ];
 
+    public function states()
+    {
+        return $this->hasMany(State::class);
+    }
+
 }
