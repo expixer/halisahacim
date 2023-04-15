@@ -10,7 +10,10 @@ class ProfileController extends Controller
 {
     public function show(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json($request->user()->with(['reservations', 'state', 'state.city'])->get());
+        return response()->json($request->user()->with([
+            'reservations',
+            'state' => ['city']
+        ])->get());
     }
 
     public function update(Request $request): \Illuminate\Http\JsonResponse
