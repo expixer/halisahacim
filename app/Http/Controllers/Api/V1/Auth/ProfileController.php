@@ -13,7 +13,7 @@ class ProfileController extends Controller
         return response()->json($request->user()->with([
             'reservations',
             'state' => ['city']
-        ])->get());
+        ])->first());
     }
 
     public function update(Request $request): \Illuminate\Http\JsonResponse
