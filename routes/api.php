@@ -19,9 +19,9 @@ Route::middleware(['cors'])->group(function () {
     Route::post('auth/login', Auth\LoginController::class);
     Route::get('cities', [V1\CityController::class, 'index']);
     Route::get('cities/{city}', [V1\StateController::class, 'index']);
-    Route::get('active-matches', [V1\MatchController::class, 'ActiveMatches']);
-    Route::get('old-matches', [V1\MatchController::class, 'OldMatches']);
     Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('active-matches', [V1\MatchController::class, 'ActiveMatches']);
+        Route::get('old-matches', [V1\MatchController::class, 'OldMatches']);
 
         Route::post('verify-mobile-code', [Auth\VerifyMobileController::class, 'verifyMobileCode']);
         Route::get('resend-mobile-code', [Auth\VerifyMobileController::class, 'resendVerifyCode']);
