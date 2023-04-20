@@ -35,11 +35,6 @@ class Image extends Model
         return asset('storage/' . $value);
     }
 
-    public function setPathAttribute($value)
-    {
-        $this->attributes['path'] = strtolower($value);
-    }
-
     public static function getImageableType($type)
     {
         return match ($type) {
