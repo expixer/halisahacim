@@ -54,7 +54,7 @@ class Reservation extends Model
     public function scopeActiveMatches($query)
     {
         $now = Carbon::now();
-        $query->with('stadium')->where('match_date', '>=', $now->format('Y-m-d'));
+        $query->with('stadium')->where('match_date', '>=', $now->format('Y-m-d'))->orderBy('match_date', 'desc');
 
         if ($now->format('Y-m-d') === $this->match_date) {
             $query->where('match_time', '>', $now->format('H:i:s'));
@@ -66,7 +66,7 @@ class Reservation extends Model
     public function scopeOldMatches($query)
     {
         $now = Carbon::now();
-        $query->with('stadium')->where('match_date', '<', $now->format('Y-m-d'));
+        $query->with('stadium')->where('match_date', '<=', $now->format('Y-m-d'))->orderBy('match_date', 'desc');;
 
         if ($now->format('Y-m-d') === $this->match_date) {
             $query->where('match_time', '<=', $now->format('H:i:s'));
