@@ -33,7 +33,6 @@ class Reservation extends Model
     ];
 
     protected $casts = [
-        'match_date' => 'date',
         'price' => 'double',
     ];
 
