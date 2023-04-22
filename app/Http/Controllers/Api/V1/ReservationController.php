@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Models\Stadium;
-use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
@@ -18,17 +18,25 @@ class ReservationController extends Controller
     public function store()
     {
         $data = request()->validate([
-            'stadium_id' => 'required|exists:stadiums,id',
-            'date' => 'required|date',
-            'time' => 'required|date_format:H:i',
-            'duration' => 'required|integer|min:1|max:3',
+            'stadium_id' => 'required|exists:stadia,id',
+            'match_date' => 'required|date',
+            'match_time' => 'required|date_format:H:i',
+            'match_type' => 'in:league,friendly',
+            'match_duration' => 'integer|min:1|max:4',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:pending,approved,rejected,canceled',
+            'notes' => 'string',
+            'phone' => 'string',
+            'email' => 'string',
         ]);
-
-        $reservation = auth()->user()->reservations()->create($data);
-
-        return $reservation;
+        $auth = auth();
+        return $auth->user()->reservations()->create(
+            array_merge($data, [
+                'user_id' => $auth->id(),
+                'match_type' => $data['match_type'] ?? 'friendly',
+                'match_duration' => $data['match_duration'] ?? 1,
+            ])
+        );
     }
 
     public function show($id)
