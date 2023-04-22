@@ -32,4 +32,16 @@ class ProfileController extends Controller
     {
         return response()->json($request->user()->state()->with('city')->first());
     }
+
+    public function updateAddress(Request $request)
+    {
+        $validatedData = $request->validate([
+            'city_id' => ['required', 'number'],
+            'state_id' => ['required', 'string'], //array kontroklü
+        ]);
+
+        auth()->user()->update($validatedData);
+
+        return response()->json($validatedData, 202);
+    }
 }

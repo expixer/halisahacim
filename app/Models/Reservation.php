@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -38,7 +39,7 @@ class Reservation extends Model
 
     public function getMatchDateTimeAttribute()
     {
-        return $this->match_date->format('Y-m-d') . ' ' . $this->match_time->format('H:i:s');
+        return Carbon::parse($this->match_date)->format('Y-m-d') . ' ' . Carbon::parse($this->match_time)->format('H:i:s');
     }
 
     public function user()
@@ -51,5 +52,28 @@ class Reservation extends Model
         return $this->belongsTo(Stadium::class);
     }
 
+    public function scopeActiveMatches($query)
+    {
+        $now = Carbon::now();
+        $query->where('match_date', '>', $now->format('Y-m-d'));
+
+        if ($now->format('Y-m-d') === $this->match_date) {
+            $query->where('match_time', '>', $now->format('H:i:s'));
+        }
+
+        return $query;
+    }
+
+    public function scopeOldMatches($query)
+    {
+        $now = Carbon::now();
+        $query->where('match_date', '<', $now->format('Y-m-d'));
+
+        if ($now->format('Y-m-d') === $this->match_date) {
+            $query->where('match_time', '<', $now->format('H:i:s'));
+        }
+
+        return $query;
+    }
 
 }
