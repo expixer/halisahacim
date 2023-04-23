@@ -36,7 +36,7 @@ class VerifyMobileController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Telefon numarası başarıyla onaylandı'
-        ]);
+        ], 201);
 
     }
 
