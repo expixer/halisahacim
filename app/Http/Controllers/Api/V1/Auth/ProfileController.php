@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -10,10 +11,12 @@ class ProfileController extends Controller
 {
     public function show(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json($request->user()->with([
-            'reservations',
-            'state' => ['city']
-        ])->first());
+        return response()->json(
+            User::with([
+                'reservations',
+                'state' => ['city']
+            ])->find(auth()->id())
+        );
     }
 
     public function update(Request $request): \Illuminate\Http\JsonResponse
