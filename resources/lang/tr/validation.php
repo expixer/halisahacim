@@ -39,7 +39,6 @@ return [
     'digits_between' => ':attribute :min ile :max arasında haneden oluşmalıdır.',
     'dimensions' => ':attribute görsel ölçüleri geçersiz.',
     'distinct' => ':attribute alanı yinelenen bir değere sahip.',
-    'email' => ':attribute alanına girilen e-posta adresi geçersiz.',
     'exists' => 'Seçili :attribute geçersiz.',
     'file' => ':attribute dosya olmalıdır.',
     'filled' => ':attribute alanının doldurulması zorunludur.',
