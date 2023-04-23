@@ -55,7 +55,8 @@ class Reservation extends Model
     {
         $now = Carbon::now();
 
-        $query->with('stadium')->where('match_date', '>=', $now->format('Y-m-d'))->orderBy('match_date', 'desc');
+        $query->with('stadium')->where('match_date', '>=', $now->format('Y-m-d'))
+            ->where('match_time', '>', $now->format('H:i:s'))->orderBy('match_date', 'desc');
 
         return $query;
     }
