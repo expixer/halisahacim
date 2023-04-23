@@ -57,7 +57,7 @@ class Reservation extends Model
         if ($now->format('Y-m-d') === $this->match_date) {
             $query->where('match_time', '>', $now->format('H:i:s'));
         }
-        $query->with('stadium')->orWhere('match_date', '>', $now->format('Y-m-d'))->orderBy('match_date', 'desc');
+        $query->with('stadium')->where('match_date', '>', $now->format('Y-m-d'))->orderBy('match_date', 'desc');
 
         return $query;
     }
