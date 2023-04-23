@@ -161,7 +161,7 @@ return [
         'password' => 'Şifre',
         'email' => 'Eposta',
         'password_confirmation' => 'Şifre (tekrar)',
-        'phone' => 'Telefon',
+        'mobile_number' => 'Telefon',
     ],
 
 ];
