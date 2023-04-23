@@ -20,10 +20,12 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-                'status' => 404
-            ]);
+            return response()->json([
+                'message' => 'Geçersiz kullanıcı kaydı bilgileri'
+            ], 404);
+           /* throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.']
+            ]);*/
         }
 
         $device    = substr($request->userAgent() ?? '', 0, 255);
