@@ -21,7 +21,7 @@ class PasswordUpdateController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Your password has been updated.',
+            'message' => 'Şifreniz başarıyla güncellendi',
         ], 202);
     }
 }
