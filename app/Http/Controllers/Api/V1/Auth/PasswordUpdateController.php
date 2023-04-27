@@ -18,7 +18,7 @@ class PasswordUpdateController extends Controller
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $errors = $e->validator->errors()->getMessages();
-            return Response::json(['errors' => $errors], 422);
+            return response()->json(['message' => 'Eski şifre uyuşmuyor', 'status' => 0], 422);
         }
 
         auth()->user()->update([
