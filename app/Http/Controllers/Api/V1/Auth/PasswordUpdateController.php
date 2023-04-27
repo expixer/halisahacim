@@ -6,15 +6,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-
+use Illuminate\Support\Facades\Response;
 class PasswordUpdateController extends Controller
 {
     public function __invoke(Request $request): \Illuminate\Http\JsonResponse
     {
-        $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password'         => ['required', 'confirmed', Password::defaults()],
-        ]);
+        try {
+            $request->validate([
+                'current_password' => ['required', 'current_password'],
+                'password' => ['required', 'confirmed', Password::defaults()],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $errors = $e->validator->errors()->getMessages();
+            return Response::json(['errors' => $errors], 422);
+        }
 
         auth()->user()->update([
             'password' => Hash::make($request->input('password')),
