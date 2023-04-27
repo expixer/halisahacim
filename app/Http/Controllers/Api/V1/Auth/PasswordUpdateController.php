@@ -9,7 +9,7 @@ use Illuminate\Validation\Rules\Password;
 
 class PasswordUpdateController extends Controller
 {
-    public function passwordUpdate(Request $request): \Illuminate\Http\JsonResponse
+    public function __invoke(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
             'current_password' => ['required', 'current_password'],
