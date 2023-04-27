@@ -16,12 +16,22 @@ class PasswordUpdateController extends Controller
             'password'         => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        auth()->user()->update([
+        $update = auth()->user()->update([
             'password' => Hash::make($request->input('password')),
         ]);
 
+        if($update){
+            return response()->json([
+                'message' => 'Şifreniz başarıyla güncellendi',
+                'status' => true
+            ], 202);
+        }
+
         return response()->json([
-            'message' => 'Şifreniz başarıyla güncellendi',
+            'message' => 'Eski şifreniz yanlış',
+            'status' => false
         ], 202);
+
+
     }
 }
