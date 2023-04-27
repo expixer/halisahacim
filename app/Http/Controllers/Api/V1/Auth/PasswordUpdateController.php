@@ -11,15 +11,10 @@ class PasswordUpdateController extends Controller
 {
     public function __invoke(Request $request): \Illuminate\Http\JsonResponse
     {
-        try {
-            $request->validate([
-                'current_password' => ['required', 'current_password'],
-                'password' => ['required', 'confirmed', Password::defaults()],
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $errors = $e->validator->errors()->getMessages();
-            return response()->json(['errors' => $errors], 422);
-        }
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password'         => ['required', 'confirmed', Password::defaults()],
+        ]);
 
         auth()->user()->update([
             'password' => Hash::make($request->input('password')),
@@ -27,7 +22,7 @@ class PasswordUpdateController extends Controller
 
         return response()->json([
             'message' => 'Şifreniz başarıyla güncellendi',
-            'status' => true
+            'status' => 1
         ], 202);
     }
 }
