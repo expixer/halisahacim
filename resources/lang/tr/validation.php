@@ -31,6 +31,7 @@ return [
     ],
     'boolean' => ':attribute sadece doğru veya yanlış olmalıdır.',
     'confirmed' => ':attribute tekrarı eşleşmiyor.',
+    'current_password' => ':attribute yanlış.',
     'date' => ':attribute geçerli bir tarih olmalıdır.',
     'date_equals' => ':attribute ile :date aynı tarihler olmalıdır.',
     'date_format' => ':attribute :format biçimi ile eşleşmiyor.',
@@ -161,6 +162,7 @@ return [
         'email' => 'Eposta',
         'password_confirmation' => 'Şifre (tekrar)',
         'mobile_number' => 'Telefon',
+        'current_password' => 'Eski şifre'
     ],
 
 ];
