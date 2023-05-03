@@ -28,6 +28,7 @@ Route::middleware(['cors'])->group(function () {
         Route::get('profile', [Auth\ProfileController::class, 'show']);
         Route::get('profile/address', [Auth\ProfileController::class, 'getAddress']);
         Route::put('profile', [Auth\ProfileController::class, 'update']);
+        Route::put('email-update', [Auth\ProfileController::class, 'updateEmail']);
         Route::put('password', Auth\PasswordUpdateController::class);
         Route::post('auth/logout', Auth\LogoutController::class);
 

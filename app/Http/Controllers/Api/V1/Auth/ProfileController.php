@@ -47,4 +47,15 @@ class ProfileController extends Controller
 
         return response()->json($validatedData, 202);
     }
+
+    public function updateEmail(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validatedData = $request->validate([
+            'email' => ['required', 'email', Rule::unique('users')->ignore(auth()->user())],
+        ]);
+
+        auth()->user()->update($validatedData);
+
+        return response()->json($validatedData, 202);
+    }
 }
