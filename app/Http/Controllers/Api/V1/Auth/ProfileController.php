@@ -56,8 +56,17 @@ class ProfileController extends Controller
 
         $update = auth()->user()->update($validatedData);
 
-        return response()->json($update,200);
+        if($update){
+            return response()->json([
+                'message' => 'E-mail değişikliği başarılı',
+                'status' => 1
+            ],200);
+        }
 
-        return response()->json($validatedData, 202);
+        return response()->json([
+            'message' => 'E-mail değişikliği başarısız',
+            'status' => 0
+        ],200);
+
     }
 }
