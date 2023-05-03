@@ -54,7 +54,9 @@ class ProfileController extends Controller
             'email' => ['required', 'email', Rule::unique('users')->ignore(auth()->user())],
         ]);
 
-        auth()->user()->update($validatedData);
+        $update = auth()->user()->update($validatedData);
+
+        return response()->json($update,200);
 
         return response()->json($validatedData, 202);
     }
