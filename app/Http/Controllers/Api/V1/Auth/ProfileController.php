@@ -59,14 +59,12 @@ class ProfileController extends Controller
         if($update){
             return response()->json([
                 'message' => 'E-mail değişikliği başarılı',
-                'status' => 1
-            ],200);
+            ]);
         }
 
         return response()->json([
             'message' => 'E-mail değişikliği başarısız',
-            'status' => 0
-        ],200);
+        ],500);
 
     }
 }
