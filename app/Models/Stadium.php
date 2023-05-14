@@ -36,22 +36,22 @@ class Stadium extends Model
     protected $hidden = [];
     use HasFactory;
 
-    public function firm()
+    public function firm(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Firm::class);
     }
 
-    public function comments()
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Comment::class);
     }
 
-    public function reservations()
+    public function reservations(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Reservation::class);
     }
 
-    public function favoriteStadiums()
+    public function favoriteStadiums(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(FavoriteStadium::class);
     }
@@ -62,7 +62,7 @@ class Stadium extends Model
     }
 
     //$date format: 2021-05-03
-    public function getAvailableHours($date = null)
+    public function getAvailableHours($date = null): bool|string
     {
         $availableHours = array();
         $date = Carbon::createFromFormat('Y-m-d', $date) ?? Carbon::now();
@@ -85,7 +85,7 @@ class Stadium extends Model
 
             if (!$startTimeForloop->lt($date->copy()->setHour(24)->setMinute(0)->setSecond(0))) {
                 $hour['zaman'] = 'ertesi gun';
-            }else{
+            } else {
                 $hour['zaman'] = 'bugun';
             }
 
@@ -96,8 +96,15 @@ class Stadium extends Model
             $startTimeForloop->addHour();
         }
 
-        $availableHours = array_map(function ($saat) use ($date) {
-            if (Reservation::where('stadium_id', $this->id)->where('match_date', $date->format('Y-m-d'))->where('match_time', $saat['saat'])->exists()) {
+        // Seçilen bir tarihe ait tüm rezervasyonları çekelim.
+        $reservations = Reservation::where('stadium_id', $this->id)
+            ->where('match_date', $date->format('Y-m-d'))
+            ->pluck('match_time')
+            ->toArray();
+
+        $availableHours = array_map(function ($saat) use ($reservations) {
+            // array_search ile rezervasyonların içinde belirli bir saatin olup olmadığını kontrol edelim.
+            if (array_search($saat['saat'] . ':00', $reservations) !== false) {
                 $saat['durum'] = 'dolu';
             }
             return $saat;
@@ -107,7 +114,7 @@ class Stadium extends Model
     }
 
     //$duration: gün sayısı
-    public function getAvailableHoursForDuration($date = null, $duration = 7)
+    public function getAvailableHoursForDuration($date = null, $duration = 7): bool|string
     {
         $availableHours = array();
         $startDate = Carbon::createFromFormat('Y-m-d', $date) ?? Carbon::now();
@@ -137,4 +144,26 @@ class Stadium extends Model
         }
         return $price;
     }
+
+    /*    public function scopeFilter($query, array $filters): void
+        {
+            $query->when($filters['search'] ?? false, fn($query, $search) =>
+            $query->where(fn($query) =>
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('body', 'like', '%' . $search . '%')
+            )
+            );
+
+            $query->when($filters['category'] ?? false, fn($query, $category) =>
+            $query->whereHas('category', fn ($query) =>
+            $query->where('slug', $category)
+            )
+            );
+
+            $query->when($filters['author'] ?? false, fn($query, $author) =>
+            $query->whereHas('author', fn ($query) =>
+            $query->where('username', $author)
+            )
+            );
+        }*/
 }

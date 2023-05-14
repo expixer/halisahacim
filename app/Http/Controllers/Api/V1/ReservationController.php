@@ -82,7 +82,7 @@ class ReservationController extends Controller
 
         $stadium = Stadium::find($request->id);
 
-        return $stadium->getAvailableHours($request->date, $request->duration);
+        return $stadium->getAvailableHours($request->date);
     }
 
     public function getAvailableHoursForDuration(Request $request)
