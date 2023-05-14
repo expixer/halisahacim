@@ -52,6 +52,7 @@ class Handler extends ExceptionHandler
     {
 
         if ($request->expectsJson()){
+
             if ($e instanceof ModelNotFoundException) {
                 return response()->json([
                     'message' => 'Kayıt Bulunamadı',
@@ -66,10 +67,12 @@ class Handler extends ExceptionHandler
                 ], 401);
             }
 
-            return response()->json([
-                'message' => 'Beklenmedik bir hata oluştu',
-                'error' => $e->getMessage(),
-            ], 500);
+            if ($e instanceof \Illuminate\Validation\ValidationException) {
+                return response()->json([
+                    'message' => 'Doğrulama Hatası',
+                    'error' => $e->errors(),
+                ], 422);
+            }
         }
 
         return parent::render($request, $e);
