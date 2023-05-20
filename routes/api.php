@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::middleware(['cors'])->group(function () {
+Route::middleware(['cors', 'api'])->group(function () {
     Route::post('auth/register', Auth\RegisterController::class);
     Route::post('auth/login', Auth\LoginController::class);
     Route::get('cities', [V1\CityController::class, 'index']);
