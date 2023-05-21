@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
     {
 
-        if ($request->expectsJson()){
+        if ($request->expectsJson()) {
 
             if ($e instanceof ModelNotFoundException) {
                 return response()->json([
@@ -73,6 +73,13 @@ class Handler extends ExceptionHandler
                     'error' => $e->errors(),
                 ], 422);
             }
+
+            return response()->json([
+                'message' => 'Beklenmedik Hata',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ], 500);
         }
 
         return parent::render($request, $e);
