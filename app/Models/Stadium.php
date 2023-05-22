@@ -61,6 +61,11 @@ class Stadium extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
+    public function features(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(StadiumFeatures::class);
+    }
+
     //$date format: 2021-05-03
     public function getAvailableHours($date = null): bool|string
     {
@@ -145,25 +150,49 @@ class Stadium extends Model
         return $price;
     }
 
-    /*    public function scopeFilter($query, array $filters): void
-        {
-            $query->when($filters['search'] ?? false, fn($query, $search) =>
-            $query->where(fn($query) =>
-            $query->where('title', 'like', '%' . $search . '%')
-                ->orWhere('body', 'like', '%' . $search . '%')
-            )
-            );
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when($filters['search'] ?? false, fn($query, $search) => $query->where(fn($query) => $query->where('name', 'like', '%' . $search . '%')
+            ->orWhere('description', 'like', '%' . $search . '%')
+        ));
 
-            $query->when($filters['category'] ?? false, fn($query, $category) =>
-            $query->whereHas('category', fn ($query) =>
-            $query->where('slug', $category)
+        $query->when($filters['feature'] ?? false,
+            fn($query, $feature) => $query->whereHas(
+                'features', fn($query) => $query->where('name', $feature)
             )
-            );
+        );
 
-            $query->when($filters['author'] ?? false, fn($query, $author) =>
-            $query->whereHas('author', fn ($query) =>
-            $query->where('username', $author)
-            )
-            );
-        }*/
+        /*        $query->when($filters['date'] ?? false,
+                    fn($query, $date) => $query->whereHas(
+                        'reservations',
+                        fn($query) => $query->whereIn('match_date', $date)
+                    )
+                );*/
+
+        $query->when($filters['city'] ?? false, fn($query, $city) => $query->where('city', $city));
+
+        $query->when($filters['state'] ?? false, fn($query, $state) => $query->where('state', $state));
+
+        $query->when($filters['price'] ?? false, fn($query, $price) => $query->where('daytime_price', '<=', $price)
+            ->orWhere('nighttime_price', '<=', $price)
+        );
+
+        $query->when($filters['daytime_price'] ?? false, fn($query, $price) => $query->where('daytime_price', '<=', $price));
+
+        $query->when($filters['nighttime_price'] ?? false, fn($query, $price) => $query->where('nighttime_price', '<=', $price));
+
+        $query->when($filters['sort'] ?? false, fn($query, $sort) => $query->orderBy($sort, 'asc'));
+
+        $query->when($filters['sort_desc'] ?? false, fn($query, $sort) => $query->orderBy($sort, 'desc'));
+
+        $query->when($filters['stadiums'] ?? false, fn($query, $stadiums) => $query->whereIn('id', $stadiums));
+
+        $query->when($filters['time'] ?? false,
+
+            fn($query) => $query->whereRaw(count($filters['time']) * count($filters['date']) .
+                " > (select count(*) from `reservations` where `stadia`.`id` = `reservations`.`stadium_id` and match_date in ('" . implode("', '", $filters['date']) . "') and match_time in ('" . implode("', '", $filters['time']) . "'))")
+
+        );
+
+    }
 }

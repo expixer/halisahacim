@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('stadium_features', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('stadium_id')->constrained()->onDelete('cascade')->nullOnDelete();
+            $table->foreignId('stadium_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('value');
             $table->boolean('is_active')->default(true);

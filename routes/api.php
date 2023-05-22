@@ -34,6 +34,7 @@ Route::middleware(['cors', 'api'])->group(function () {
 
         Route::middleware(['verify.mobile'])->group(function () {
             Route::apiResource('images', V1\ImageController::class);
+            Route::get('stadiums/search', [V1\StadiumSearchController::class, 'index']);
             Route::apiResource('stadiums', V1\StadiumController::class);
             Route::get('reservations/get-available', [V1\ReservationController::class, 'getAvailableHours']);
             Route::get('reservations/get-available-duration', [V1\ReservationController::class, 'getAvailableHoursForDuration']);
