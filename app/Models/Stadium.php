@@ -171,7 +171,7 @@ class Stadium extends Model
 
         $query->when($filters['city'] ?? false, fn($query, $city) => $query->where('city', $city));
 
-        $query->when($filters['state'] ?? false, fn($query, $state) => $query->where('state', $state));
+        $query->when($filters['state'] ?? false, fn($query, $state) => $query->whereIn('state', $state));
 
         $query->when($filters['price'] ?? false, fn($query, $price) => $query->where('daytime_price', '<=', $price)
             ->orWhere('nighttime_price', '<=', $price)
@@ -188,10 +188,8 @@ class Stadium extends Model
         $query->when($filters['stadiums'] ?? false, fn($query, $stadiums) => $query->whereIn('id', $stadiums));
 
         $query->when($filters['time'] ?? false,
-
             fn($query) => $query->whereRaw(count($filters['time']) * count($filters['date']) .
                 " > (select count(*) from `reservations` where `stadia`.`id` = `reservations`.`stadium_id` and match_date in ('" . implode("', '", $filters['date']) . "') and match_time in ('" . implode("', '", $filters['time']) . "'))")
-
         );
 
     }
