@@ -40,7 +40,7 @@ class ProfileController extends Controller
     {
         $validatedData = $request->validate([
             'city_id' => ['required', 'number'],
-            'state_id' => ['required', 'string'], //array kontroklü
+            'state_id' => ['required', ], //array kontroklü
         ]);
 
         auth()->user()->update($validatedData);
