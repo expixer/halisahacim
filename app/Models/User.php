@@ -34,6 +34,7 @@ class User extends Authenticatable implements IMustVerifyMobile
         'mobile_attempts_left',
         'mobile_last_attempt_date',
         'mobile_verify_code_sent_at',
+        'city_id',
         'is_admin',
         'is_active'
     ];

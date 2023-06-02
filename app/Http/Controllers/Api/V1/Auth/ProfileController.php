@@ -46,11 +46,13 @@ class ProfileController extends Controller
         ]);
         DB::transaction(function () use ($validatedData) {
             auth()->user()->update(['city_id' => $validatedData['city_id']]);
+
             StateUser::query()->where('user_id', auth()->id())->delete();
-            foreach ($validatedData as $validatedDatum) {
+
+            foreach ($validatedData['state_id'] as $state_id) {
                 StateUser::query()->create([
                     'user_id' => auth()->id(),
-                    'state_id' => $validatedDatum['state_id']
+                    'state_id' => $state_id
                 ]);
             }
 
