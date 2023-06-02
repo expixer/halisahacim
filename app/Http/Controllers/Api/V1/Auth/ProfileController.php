@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\StateUser;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -40,11 +42,19 @@ class ProfileController extends Controller
     {
         $validatedData = $request->validate([
             'city_id' => ['required'],
-            'state_id' => ['required', ], //array kontroklü
+            'state_id' => ['required'], //array kontroklü
         ]);
+        DB::transaction(function () use ($validatedData) {
+            auth()->user()->update(['city_id' => $validatedData['city_id']]);
+            StateUser::query()->where('user_id', auth()->id())->delete();
+            foreach ($validatedData as $validatedDatum) {
+                StateUser::query()->create([
+                    'user_id' => auth()->id(),
+                    'state_id' => $validatedDatum['state_id']
+                ]);
+            }
 
-        auth()->user()->update($validatedData);
-
+        });
         return response()->json($validatedData, 202);
     }
 
@@ -56,7 +66,7 @@ class ProfileController extends Controller
 
         $update = auth()->user()->update($validatedData);
 
-        if($update){
+        if ($update) {
             return response()->json([
                 'message' => 'E-mail değişikliği başarılı',
             ]);
@@ -64,7 +74,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'message' => 'E-mail değişikliği başarısız',
-        ],500);
+        ], 500);
 
     }
 }
