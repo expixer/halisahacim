@@ -39,7 +39,7 @@ class ProfileController extends Controller
     public function updateAddress(Request $request)
     {
         $validatedData = $request->validate([
-            'city_id' => ['required', 'number'],
+            'city_id' => ['required'],
             'state_id' => ['required', ], //array kontroklü
         ]);
 
