@@ -36,7 +36,10 @@ class ProfileController extends Controller
 
     public function getAddress(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json($request->user()->state()->with('city')->first());
+        return response()->json([
+            'city' => auth()->user()->city()->first(),
+            'states' => auth()->user()->states()->get(['states.id', 'state_name'])
+        ]);
     }
 
     public function updateAddress(Request $request)
