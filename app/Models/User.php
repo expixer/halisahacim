@@ -78,9 +78,9 @@ class User extends Authenticatable implements IMustVerifyMobile
         return $this->hasMany(FavoriteStadium::class);
     }
 
-    public function state()
+    public function states()
     {
-        return $this->belongsTo(State::class);
+        return $this->belongsToMany(State::class);
     }
 
     public function city()

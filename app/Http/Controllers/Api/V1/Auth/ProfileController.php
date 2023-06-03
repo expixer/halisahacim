@@ -16,7 +16,8 @@ class ProfileController extends Controller
         return response()->json(
             User::with([
                 'reservations',
-                'state' => ['city']
+                'city',
+                'states' //=> ['city']
             ])->find(auth()->id())
         );
     }
@@ -41,8 +42,9 @@ class ProfileController extends Controller
     public function updateAddress(Request $request)
     {
         $validatedData = $request->validate([
-            'city_id' => ['required'],
-            'state_id' => ['required'], //array kontroklü
+            'city_id' => ['required', 'exists:cities,id', 'integer', 'min:1', 'max:81'],
+            //array kontrolü
+            'state_id' => ['required', 'array'],
         ]);
         DB::transaction(function () use ($validatedData) {
             auth()->user()->update(['city_id' => $validatedData['city_id']]);
