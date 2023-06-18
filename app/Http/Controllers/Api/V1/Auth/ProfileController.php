@@ -17,7 +17,7 @@ class ProfileController extends Controller
             User::with([
                 'reservations',
                 'city',
-                'states' //=> ['city']
+                'states', //=> ['city']
             ])->find(auth()->id())
         );
     }
@@ -38,7 +38,7 @@ class ProfileController extends Controller
     {
         return response()->json([
             'city' => auth()->user()->city()->first(),
-            'states' => auth()->user()->states()->get(['states.id', 'state_name'])
+            'states' => auth()->user()->states()->get(['states.id', 'state_name']),
         ]);
     }
 
@@ -57,11 +57,12 @@ class ProfileController extends Controller
             foreach ($validatedData['state_id'] as $state_id) {
                 StateUser::query()->create([
                     'user_id' => auth()->id(),
-                    'state_id' => $state_id
+                    'state_id' => $state_id,
                 ]);
             }
 
         });
+
         return response()->json($validatedData, 202);
     }
 

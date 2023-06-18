@@ -22,5 +22,4 @@ class City extends Model
     {
         return $this->hasMany(State::class);
     }
-
 }

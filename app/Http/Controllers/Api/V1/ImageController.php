@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Image;
-use App\Models\Stadium;
 use Illuminate\Http\Request;
 
 class ImageController extends Controller
@@ -29,7 +28,7 @@ class ImageController extends Controller
         ]);
 
         $imageableType = Image::getImageableType($request->type);
-        $imagePath = $request->file('image')->storeAs('images/' . $request->type, $request->id . '-'. time() . '.jpg', 'public');
+        $imagePath = $request->file('image')->storeAs('images/'.$request->type, $request->id.'-'.time().'.jpg', 'public');
 
         $data = Image::create([
             'path' => $imagePath,

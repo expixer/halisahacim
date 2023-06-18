@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
-use Carbon\Carbon;
 
 class MatchController extends Controller
 {
@@ -17,6 +16,4 @@ class MatchController extends Controller
     {
         return Reservation::where('user_id', auth()->id())->oldMatches()->get();
     }
-
-
 }

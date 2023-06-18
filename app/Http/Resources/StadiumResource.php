@@ -7,20 +7,20 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class StadiumResource extends JsonResource
 {
-
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         $favorite = $this->favoriteStadiums()->where('user_id', auth()->id());
+
         return [
             'id' => $this->id,
             'name' => $this->name,
-//            'firm_id' => $this->firm_id,
+            //            'firm_id' => $this->firm_id,
             'description' => $this->description,
             'address' => $this->address,
             'latitude' => $this->latitude,
@@ -43,7 +43,7 @@ class StadiumResource extends JsonResource
             'comments' => CommentResource::collection($this->whenLoaded('comments')),
             'is_favorite' => $favorite->exists(),
             'favorite_id' => $favorite->exists() ? $favorite->first()->id : 0,
-            'created_at' => (string)$this->created_at,
+            'created_at' => (string) $this->created_at,
         ];
     }
 

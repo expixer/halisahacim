@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Reservation;
 use App\Models\Stadium;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
@@ -34,6 +32,7 @@ class ReservationController extends Controller
             'email' => 'string',
         ]);
         $auth = auth();
+
         return $auth->user()->reservations()->create(
             array_merge($data, [
                 'user_id' => $auth->id(),

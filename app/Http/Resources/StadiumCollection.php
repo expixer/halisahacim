@@ -9,6 +9,7 @@ class StadiumCollection extends ResourceCollection
     /**
      * Transform the resource collection into an array.
      *N
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
@@ -16,11 +17,12 @@ class StadiumCollection extends ResourceCollection
     {
         return StadiumResource::collection($this->collection);
     }
+
     public function with($request)
     {
         return [
             'status' => 'success',
-            'count' => $this->collection->count()
+            'count' => $this->collection->count(),
         ];
     }
 }

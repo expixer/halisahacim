@@ -38,7 +38,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::view('verify-mobile','auth.verify-mobile')->name('verification-mobile.notice');
+Route::view('verify-mobile', 'auth.verify-mobile')->name('verification-mobile.notice');
 Route::post('verify-mobile', [VerifyMobileController::class, '__invoke'])
     ->middleware(['throttle:6,1'])
     ->name('verification.verify-mobile');

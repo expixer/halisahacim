@@ -29,10 +29,9 @@ class Image extends Model
         return $this->morphTo();
     }
 
-
     public function getPathAttribute($value)
     {
-        return asset('storage/' . $value);
+        return asset('storage/'.$value);
     }
 
     public static function getImageableType($type)

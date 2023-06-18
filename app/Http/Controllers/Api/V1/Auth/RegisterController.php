@@ -41,6 +41,4 @@ class RegisterController extends Controller
             'is_mobile_verified' => $user->hasVerifiedMobile(),
         ], 201);
     }
-
-
 }

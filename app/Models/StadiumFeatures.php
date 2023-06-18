@@ -16,12 +16,12 @@ class StadiumFeatures extends Model
         'name',
         'value',
         'is_active',
-        'is_required'
+        'is_required',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'is_required' => 'boolean'
+        'is_required' => 'boolean',
     ];
 
     public function stadium()

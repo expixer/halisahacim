@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
-        Schema::table('users', function (Blueprint $table){
+        Schema::table('users', function (Blueprint $table) {
             $table->foreign('firm_id')->references('id')->on('firms')->onDelete('cascade');
         });
-        Schema::table('stadia', function (Blueprint $table){
+        Schema::table('stadia', function (Blueprint $table) {
             $table->foreign('firm_id')->references('id')->on('firms')->onDelete('cascade');
         });
 
@@ -34,8 +34,8 @@ return new class extends Migration
      */
     public function down()
     {
-        foreach (['stadia','users'] as $tableName) {
-            Schema::table($tableName, function (Blueprint $table){
+        foreach (['stadia', 'users'] as $tableName) {
+            Schema::table($tableName, function (Blueprint $table) {
                 $table->dropConstrainedForeignId('firm_id');
             });
         }

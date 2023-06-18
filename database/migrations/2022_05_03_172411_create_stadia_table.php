@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('reservations', function (Blueprint $table){
+        Schema::table('reservations', function (Blueprint $table) {
             $table->foreign('stadium_id')->references('id')->on('stadia')->onDelete('cascade');
         });
 
@@ -42,7 +42,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('reservations', function (Blueprint $table){
+        Schema::table('reservations', function (Blueprint $table) {
             $table->dropConstrainedForeignId('stadium_id');
         });
         Schema::dropIfExists('stadia');

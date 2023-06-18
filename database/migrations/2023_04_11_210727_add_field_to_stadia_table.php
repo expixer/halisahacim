@@ -30,7 +30,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-    Schema::table('stadia', function (Blueprint $table) {
+        Schema::table('stadia', function (Blueprint $table) {
             $table->dropColumn('address');
             $table->dropColumn('city');
             $table->dropColumn('state');

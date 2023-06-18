@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Interfaces\MustVerifyMobile;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
-use App\Interfaces\MustVerifyMobile;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 
 class EnsureMobileIsVerifiedMiddleware
 {

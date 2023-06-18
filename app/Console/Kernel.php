@@ -14,7 +14,6 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('telescope:prune --hours=48')->daily();
-        $schedule->exec('git pull')->everyFiveMinutes(); // This is a test
     }
 
     /**

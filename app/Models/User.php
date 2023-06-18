@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\MustVerifyMobile;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Interfaces\MustVerifyMobile as IMustVerifyMobile;
+use App\Traits\MustVerifyMobile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -36,7 +35,7 @@ class User extends Authenticatable implements IMustVerifyMobile
         'mobile_verify_code_sent_at',
         'city_id',
         'is_admin',
-        'is_active'
+        'is_active',
     ];
 
     protected $hidden = [
@@ -51,7 +50,7 @@ class User extends Authenticatable implements IMustVerifyMobile
         'email_verified_at' => 'datetime',
         'number_verified_at' => 'datetime',
         'mobile_verify_code_sent_at' => 'datetime',
-        'mobile_last_attempt_date' => 'datetime'
+        'mobile_last_attempt_date' => 'datetime',
     ];
 
     protected $appends = [

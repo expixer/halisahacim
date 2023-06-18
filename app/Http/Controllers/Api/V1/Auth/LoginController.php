@@ -22,14 +22,14 @@ class LoginController extends Controller
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Geçersiz kullanıcı kaydı bilgileri',
-                'status' => false
+                'status' => false,
             ], 404);
-           /* throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.']
-            ]);*/
+            /* throw ValidationException::withMessages([
+                 'email' => ['The provided credentials are incorrect.']
+             ]);*/
         }
 
-        $device    = substr($request->userAgent() ?? '', 0, 255);
+        $device = substr($request->userAgent() ?? '', 0, 255);
         $expiresAt = $request->remember ? null : now()->addMinutes(config('session.lifetime'));
 
         return response()->json([

@@ -38,7 +38,7 @@ class Reservation extends Model
 
     public function getMatchDateTimeAttribute(): string
     {
-        return Carbon::parse($this->match_date)->format('Y-m-d') . ' ' . Carbon::parse($this->match_time)->format('H:i:s');
+        return Carbon::parse($this->match_date)->format('Y-m-d').' '.Carbon::parse($this->match_time)->format('H:i:s');
     }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -69,9 +69,8 @@ class Reservation extends Model
         $query->with('stadium')
             ->where('match_date', '<=', $now->format('Y-m-d'))
             ->where('match_time', '<=', $now->format('H:i:s'))
-            ->orderBy('match_date', 'desc');;
+            ->orderBy('match_date', 'desc');
 
         return $query;
     }
-
 }
