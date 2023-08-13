@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyMobileController;
+use App\Http\Controllers\TempController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,6 +16,7 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('gitpull', [TempController::class, 'gitpull']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -36,7 +38,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::view('verify-mobile','auth.verify-mobile')->name('verification-mobile.notice');
+Route::view('verify-mobile', 'auth.verify-mobile')->name('verification-mobile.notice');
 Route::post('verify-mobile', [VerifyMobileController::class, '__invoke'])
     ->middleware(['throttle:6,1'])
     ->name('verification.verify-mobile');

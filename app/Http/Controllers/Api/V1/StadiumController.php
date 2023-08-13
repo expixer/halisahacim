@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StadiumRequest;
-use App\Http\Resources\FirmResource;
 use App\Http\Resources\StadiumCollection;
 use App\Http\Resources\StadiumResource;
-use App\Models\Firm;
 use App\Models\Stadium;
 use Illuminate\Http\Request;
 
@@ -19,7 +18,7 @@ class StadiumController extends Controller
      */
     public function index()
     {
-        return new StadiumCollection(Stadium::with(['firm', 'comments'])->paginate());
+        return new StadiumCollection(Stadium::with(['firm', 'comments', 'favoriteStadiums', 'images'])->paginate());
     }
 
     /**
@@ -35,7 +34,6 @@ class StadiumController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Http\Requests\StadiumRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StadiumRequest $request)
@@ -46,18 +44,20 @@ class StadiumController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Stadium $stadium
+     * @param  Stadium  $stadium
      * @return StadiumResource
      */
-    public function show(Stadium $stadium)
+    public function show($stadium)
     {
+        $stadium = Stadium::with(['firm', 'comments', 'favoriteStadiums', 'images'])->find($stadium);
+
         return new StadiumResource($stadium);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -68,8 +68,7 @@ class StadiumController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -80,7 +79,7 @@ class StadiumController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

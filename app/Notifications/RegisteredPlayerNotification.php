@@ -8,7 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
 use TarfinLabs\Netgsm\NetgsmChannel;
 use TarfinLabs\Netgsm\Sms\NetgsmSmsMessage;
 
@@ -35,12 +34,12 @@ class RegisteredPlayerNotification extends Notification implements ShouldQueue
     {
         $channels = ['mail'];
 
-        $channels[] = 'vonage';
-/*        if ($notifiable->routes[NetgsmChannel::class]) {
-            $channels[] = NetgsmChannel::class;
-        }*/
+        // $channels[] = 'vonage';
+        /*        if ($notifiable->routes[NetgsmChannel::class]) {
+                    $channels[] = NetgsmChannel::class;
+                }*/
 
-        return $channels;
+        return [];
     }
 
     /**
@@ -59,7 +58,7 @@ class RegisteredPlayerNotification extends Notification implements ShouldQueue
      */
     public function toNetgsm($notifiable)
     {
-        return (new NetGsmSmsMessage("Tebrikler {$notifiable->name}! Halısahacım uygulamasına başarıyla kaydoldunuz."));
+        return new NetGsmSmsMessage("Tebrikler {$notifiable->name}! Halısahacım uygulamasına başarıyla kaydoldunuz.");
     }
 
     public function toVonage($notifiable): VonageMessage

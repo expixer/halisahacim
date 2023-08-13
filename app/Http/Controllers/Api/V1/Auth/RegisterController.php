@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Http\Controllers\Api\V1\Controller;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\RegisteredPlayerNotification;
 use Illuminate\Auth\Events\Registered;
@@ -18,7 +18,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'mobile_number' => ['required', 'string', 'min:12', 'max:12', 'unique:users'],
+            'mobile_number' => ['required', 'string', 'size:11', 'unique:users'],
         ]);
 
         $user = User::create([
@@ -38,6 +38,7 @@ class RegisterController extends Controller
 
         return response()->json([
             'access_token' => $user->createToken($device)->plainTextToken,
+            'is_mobile_verified' => $user->hasVerifiedMobile(),
         ], 201);
     }
 }

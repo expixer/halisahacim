@@ -2,8 +2,9 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use \Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -47,22 +48,40 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
     {
 
-        if ($request->expectsJson()){
-            if ($exception instanceof ModelNotFoundException) {
+        if ($request->expectsJson()) {
+
+            if ($e instanceof ModelNotFoundException) {
                 return response()->json([
                     'message' => 'Kayıt Bulunamadı',
+                    'error' => $e->getMessage(),
                 ], 404);
             }
 
+            if ($e instanceof AuthenticationException) {
+                return response()->json([
+                    'message' => 'Yetkisiz Erişim',
+                    'error' => $e->getMessage(),
+                ], 401);
+            }
+
+            if ($e instanceof \Illuminate\Validation\ValidationException) {
+                return response()->json([
+                    'message' => 'Doğrulama Hatası',
+                    'error' => $e->errors(),
+                ], 422);
+            }
+
             return response()->json([
-                'message' => 'Beklenmedik bir hata oluştu',
-                'error' => $exception->getMessage(),
+                'message' => 'Beklenmedik Hata',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ], 500);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }

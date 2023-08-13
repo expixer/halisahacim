@@ -28,7 +28,7 @@ class StoreStadium extends FormRequest
             'a' => 'required',
             'b' => 'required',
             'c' => ['required', Rule::when(request()->routeIs('stadium.store'), 'sometimes')],
-            'email' => ['required', Rule::unique('users')->ignore($this->user->id)]
+            'email' => ['required', Rule::unique('users')->ignore($this->user->id)],
         ];
     }
 }

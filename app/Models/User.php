@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\MustVerifyMobile;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Interfaces\MustVerifyMobile as IMustVerifyMobile;
+use App\Traits\MustVerifyMobile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -33,8 +33,9 @@ class User extends Authenticatable implements IMustVerifyMobile
         'mobile_attempts_left',
         'mobile_last_attempt_date',
         'mobile_verify_code_sent_at',
+        'city_id',
         'is_admin',
-        'is_active'
+        'is_active',
     ];
 
     protected $hidden = [
@@ -49,7 +50,7 @@ class User extends Authenticatable implements IMustVerifyMobile
         'email_verified_at' => 'datetime',
         'number_verified_at' => 'datetime',
         'mobile_verify_code_sent_at' => 'datetime',
-        'mobile_last_attempt_date' => 'datetime'
+        'mobile_last_attempt_date' => 'datetime',
     ];
 
     protected $appends = [
@@ -64,5 +65,30 @@ class User extends Authenticatable implements IMustVerifyMobile
     public function routeNotificationForVonage($notification)
     {
         return $this->mobile_number;
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    public function favoriteStadiums()
+    {
+        return $this->hasMany(FavoriteStadium::class);
+    }
+
+    public function states()
+    {
+        return $this->belongsToMany(State::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function image(): MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable');
     }
 }

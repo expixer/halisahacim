@@ -33,7 +33,7 @@ class StadiumRequest extends FormRequest
             'nighttime_start' => ['required'],
             'nighttime_end' => ['required'],
             'daytime_price' => ['required'],
-            'nighttime_price' => ['required']
+            'nighttime_price' => ['required'],
         ];
     }
 }
