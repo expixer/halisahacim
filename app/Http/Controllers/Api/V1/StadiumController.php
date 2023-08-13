@@ -44,7 +44,7 @@ class StadiumController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Stadium  $stadium
+     * @param Stadium $stadium
      * @return StadiumResource
      */
     public function show($stadium)
@@ -55,31 +55,20 @@ class StadiumController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StadiumRequest $request, $id): \Illuminate\Http\Response
     {
-        //
+        return response(Stadium::query()->find($id)->update($request->validated()), 201);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
