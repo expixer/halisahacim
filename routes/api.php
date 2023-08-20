@@ -19,6 +19,7 @@ Route::middleware(['cors', 'api'])->group(function () {
     Route::post('auth/login', Auth\LoginController::class);
     Route::get('cities', [V1\CityController::class, 'index']);
     Route::get('cities/{city}', [V1\StateController::class, 'index']);
+    Route::get('stadiums/search', [V1\StadiumSearchController::class, 'index']);
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('active-matches', [V1\MatchController::class, 'ActiveMatches']);
         Route::get('old-matches', [V1\MatchController::class, 'OldMatches']);
@@ -35,7 +36,6 @@ Route::middleware(['cors', 'api'])->group(function () {
 
         Route::middleware(['verify.mobile'])->group(function () {
             Route::apiResource('images', V1\ImageController::class);
-            Route::get('stadiums/search', [V1\StadiumSearchController::class, 'index']);
             Route::apiResource('stadiums', V1\StadiumController::class);
             Route::get('reservations/get-available', [V1\ReservationController::class, 'getAvailableHours']);
             Route::get('reservations/get-available-duration', [V1\ReservationController::class, 'getAvailableHoursForDuration']);
