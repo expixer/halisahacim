@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class Stadium extends Model
-{
+class Stadium extends Model {
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'firm_id',
@@ -33,47 +34,44 @@ class Stadium extends Model
         'recording',
     ];
 
-    protected $hidden = [];
+    protected $casts = [
+        'recording' => 'boolean',
+    ];
 
-    use HasFactory;
-
-    public function firm(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
+    public function firm(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
         return $this->belongsTo(Firm::class);
     }
 
-    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(Comment::class);
     }
 
-    public function reservations(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
+    public function reservations(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(Reservation::class);
     }
 
-    public function favoriteStadiums(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
+    public function favoriteStadiums(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(FavoriteStadium::class);
     }
 
-    public function images(): MorphMany
-    {
+    public function images(): MorphMany {
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    public function features(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
+    public function features(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(StadiumFeatures::class);
     }
 
     //$date format: 2021-05-03
-    public function getAvailableHours($date = null): bool|string
-    {
+    public function getAvailableHours($date = null): bool|string {
         $availableHours = [];
         $date = Carbon::createFromFormat('Y-m-d', $date) ?? Carbon::now();
-        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $date->format('Y-m-d').' '.$this->opening_time)->setMinute(0)->setSecond(0);
-        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $date->format('Y-m-d').' '.$this->closing_time)->setMinute(0)->setSecond(0);
+        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} {$this->opening_time}")
+            ->setMinute(0)
+            ->setSecond(0);
+        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')}.' '.{$this->closing_time}")
+            ->setMinute(0)
+            ->setSecond(0);
 
         if ($startTime > $endTime) {
             $endTime->addDay();
@@ -86,15 +84,19 @@ class Stadium extends Model
                 'durum' => 'bos',
             ];
 
-            $hour['fiyat'] = $this->daytime_price; //$this->setProperPrice($start_time);
+            $hour['fiyat'] = $this->daytime_price; //$this->getProperPrice($start_time);
 
-            if (! $startTimeForloop->lt($date->copy()->setHour(24)->setMinute(0)->setSecond(0))) {
+            if (!$startTimeForloop->lt($date->copy()
+                ->setHour(24)
+                ->setMinute(0)
+                ->setSecond(0))) {
                 $hour['zaman'] = 'ertesi gun';
             } else {
                 $hour['zaman'] = 'bugun';
             }
 
-            if ($startTimeForloop < Carbon::now()->addMinutes(30)) {
+            if ($startTimeForloop < Carbon::now()
+                    ->addMinutes(30)) {
                 $hour['durum'] = 'gecmis';
             }
             $availableHours[] = $hour;
@@ -109,7 +111,7 @@ class Stadium extends Model
 
         $availableHours = array_map(function ($saat) use ($reservations) {
             // array_search ile rezervasyonların içinde belirli bir saatin olup olmadığını kontrol edelim.
-            if (array_search($saat['saat'].':00', $reservations) !== false) {
+            if (array_search("{$saat['saat']}:00", $reservations) !== false) {
                 $saat['durum'] = 'dolu';
             }
 
@@ -120,13 +122,13 @@ class Stadium extends Model
     }
 
     //$duration: gün sayısı
-    public function getAvailableHoursForDuration($date = null, $duration = 7): bool|string
-    {
+    public function getAvailableHoursForDuration($date = null, $duration = 7): bool|string {
         $availableHours = [];
         $startDate = Carbon::createFromFormat('Y-m-d', $date) ?? Carbon::now();
 
         for ($i = 0; $i < $duration; $i++) {
-            $currentDate = $startDate->copy()->addDays($i);
+            $currentDate = $startDate->copy()
+                ->addDays($i);
             $hours = $this->getAvailableHours($currentDate->format('Y-m-d'));
             $availableHours[] = [
                 'gun' => $currentDate->format('Y-m-d'),
@@ -137,10 +139,9 @@ class Stadium extends Model
         return json_encode($availableHours);
     }
 
-    //gündüz veya gece tarifesine göre fiyatı ayarlar
+
     //todo: düzeltilmeli
-    public function setProperPrice($date)
-    {
+    public function getProperPrice($date) {
         if ($date->format('H:i') >= $this->daytime_start && $date->format('H:i') < $this->nighttime_start) {
             $price = $this->daytime_price;
         } elseif ($date->format('H:i') >= $this->nighttime_start && $date->format('H:i') < $this->nighttime_end) {
@@ -152,17 +153,11 @@ class Stadium extends Model
         return $price;
     }
 
-    public function scopeFilter($query, array $filters): void
-    {
-        $query->when($filters['search'] ?? false, fn ($query, $search) => $query->where(fn ($query) => $query->where('name', 'like', '%'.$search.'%')
-            ->orWhere('description', 'like', '%'.$search.'%')
-        ));
+    public function scopeFilter($query, array $filters): void {
+        $query->when($filters['search'] ?? false, fn($query, $search) => $query->where(fn($query) => $query->where('name', 'like', '%' . $search . '%')
+            ->orWhere('description', 'like', '%' . $search . '%')));
 
-        $query->when($filters['feature'] ?? false,
-            fn ($query, $feature) => $query->whereHas(
-                'features', fn ($query) => $query->where('name', $feature)
-            )
-        );
+        $query->when($filters['feature'] ?? false, fn($query, $feature) => $query->whereHas('features', fn($query) => $query->where('name', $feature)));
 
         /*        $query->when($filters['date'] ?? false,
                     fn($query, $date) => $query->whereHas(
@@ -171,29 +166,24 @@ class Stadium extends Model
                     )
                 );*/
 
-        $query->when($filters['city'] ?? false, fn ($query, $city) => $query->where('city', $city));
+        $query->when($filters['city'] ?? false, fn($query, $city) => $query->where('city', $city));
 
-        $query->when($filters['state'] ?? false, fn ($query, $state) => $query->whereIn('state', $state));
+        $query->when($filters['state'] ?? false, fn($query, $state) => $query->whereIn('state', $state));
 
-        $query->when($filters['price'] ?? false, fn ($query, $price) => $query->where('daytime_price', '<=', $price)
-            ->orWhere('nighttime_price', '<=', $price)
-        );
+        $query->when($filters['price'] ?? false, fn($query, $price) => $query->where('daytime_price', '<=', $price)
+            ->orWhere('nighttime_price', '<=', $price));
 
-        $query->when($filters['daytime_price'] ?? false, fn ($query, $price) => $query->where('daytime_price', '<=', $price));
+        $query->when($filters['daytime_price'] ?? false, fn($query, $price) => $query->where('daytime_price', '<=', $price));
 
-        $query->when($filters['nighttime_price'] ?? false, fn ($query, $price) => $query->where('nighttime_price', '<=', $price));
+        $query->when($filters['nighttime_price'] ?? false, fn($query, $price) => $query->where('nighttime_price', '<=', $price));
 
-        $query->when($filters['sort'] ?? false, fn ($query, $sort) => $query->orderBy($sort, 'asc'));
+        $query->when($filters['sort'] ?? false, fn($query, $sort) => $query->orderBy($sort, 'asc'));
 
-        $query->when($filters['sort_desc'] ?? false, fn ($query, $sort) => $query->orderBy($sort, 'desc'));
+        $query->when($filters['sort_desc'] ?? false, fn($query, $sort) => $query->orderBy($sort, 'desc'));
 
-        $query->when($filters['stadiums'] ?? false, fn ($query, $stadiums) => $query->whereIn('id', $stadiums));
+        $query->when($filters['stadiums'] ?? false, fn($query, $stadiums) => $query->whereIn('id', $stadiums));
 
-        $query->when($filters['time'] ?? false,
-            fn ($query) => $query->whereRaw(count($filters['time']) * count($filters['date']).
-                ' > (select count(*) from `reservations` where `stadia`.`id` = `reservations`.`stadium_id` and match_date in '.
-                "('".implode("', '", $filters['date'])."') and match_time in ('".implode("', '", $filters['time'])."'))")
-        );
+        $query->when($filters['time'] ?? false, fn($query) => $query->whereRaw(count($filters['time']) * count($filters['date']) . ' > (select count(*) from `reservations` where `stadia`.`id` = `reservations`.`stadium_id` and match_date in ' . "('" . implode("', '", $filters['date']) . "') and match_time in ('" . implode("', '", $filters['time']) . "'))"));
 
     }
 }
