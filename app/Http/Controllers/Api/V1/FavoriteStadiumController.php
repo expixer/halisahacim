@@ -21,9 +21,7 @@ class FavoriteStadiumController extends Controller
             ]
         );
         //$favorites = auth()->user()->favoriteStadiums()->findOrFail(request());
-        $favorites = auth()->user()->favoriteStadiums()->create($data);
-
-        return $favorites;
+        return auth()->user()->favoriteStadiums()->create($data);
     }
 
     public function destroy($id)

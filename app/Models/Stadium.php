@@ -66,10 +66,10 @@ class Stadium extends Model {
     public function getAvailableHours($date = null): bool|string {
         $availableHours = [];
         $date = Carbon::createFromFormat('Y-m-d', $date) ?? Carbon::now();
-        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} {$this->opening_time}")
+        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d H:i:s')} {$this->opening_time}")
             ->setMinute(0)
             ->setSecond(0);
-        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')}.' '.{$this->closing_time}")
+        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d H:i:s')}.' '.{$this->closing_time}")
             ->setMinute(0)
             ->setSecond(0);
 

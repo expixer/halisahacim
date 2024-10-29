@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -53,7 +54,8 @@ class Handler extends ExceptionHandler
 
         if ($request->expectsJson()) {
 
-            if ($e instanceof ModelNotFoundException) {
+            if ($e instanceof ModelNotFoundException
+            || $e instanceof RouteNotFoundException) {
                 return response()->json([
                     'message' => 'Kayıt Bulunamadı',
                     'error' => $e->getMessage(),
