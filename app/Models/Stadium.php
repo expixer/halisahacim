@@ -58,65 +58,62 @@ class Stadium extends Model {
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    public function features(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    public function   features(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(StadiumFeatures::class);
     }
 
     //$date format: 2021-05-03
-    public function getAvailableHours($date = null): bool|string {
-        $availableHours = [];
+    public function getAvailableHours($date = null): bool|string
+    {
         $date = Carbon::createFromFormat('Y-m-d', $date) ?? Carbon::now();
-        $startTime = Carbon::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d H:i:s')} {$this->opening_time}")
-            ->setMinute(0)
-            ->setSecond(0);
-        $endTime = Carbon::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d H:i:s')}.' '.{$this->closing_time}")
-            ->setMinute(0)
+        $availableHours = [];
+
+        // Başlangıç ve bitiş saatlerini oluştur
+        $startTime = Carbon::createFromFormat('H:i:s', $this->opening_time)
+            ->setDateFrom($date)
             ->setSecond(0);
 
+        $endTime = Carbon::createFromFormat('H:i:s', $this->closing_time)
+            ->setDateFrom($date)
+            ->setSecond(0);
+
+        // Eğer başlangıç saati, bitiş saatinden sonra ise bitiş saatini ertesi güne al
         if ($startTime > $endTime) {
             $endTime->addDay();
         }
 
-        $startTimeForloop = $startTime->copy();
-        while ($startTimeForloop <= $endTime) {
-            $hour = [
-                'saat' => $startTimeForloop->format('H:i'),
-                'durum' => 'bos',
-            ];
-
-            $hour['fiyat'] = $this->daytime_price; //$this->getProperPrice($start_time);
-
-            if (!$startTimeForloop->lt($date->copy()
-                ->setHour(24)
-                ->setMinute(0)
-                ->setSecond(0))) {
-                $hour['zaman'] = 'ertesi gun';
-            } else {
-                $hour['zaman'] = 'bugun';
-            }
-
-            if ($startTimeForloop < Carbon::now()
-                    ->addMinutes(30)) {
-                $hour['durum'] = 'gecmis';
-            }
-            $availableHours[] = $hour;
-            $startTimeForloop->addHour();
-        }
-
-        // Seçilen bir tarihe ait tüm rezervasyonları çekelim.
+        // Seçilen tarihe ait tüm rezervasyonları al
         $reservations = Reservation::where('stadium_id', $this->id)
             ->where('match_date', $date->format('Y-m-d'))
             ->pluck('match_time')
             ->toArray();
 
-        $availableHours = array_map(function ($saat) use ($reservations) {
-            // array_search ile rezervasyonların içinde belirli bir saatin olup olmadığını kontrol edelim.
-            if (array_search("{$saat['saat']}:00", $reservations) !== false) {
-                $saat['durum'] = 'dolu';
+        $currentDateTime = Carbon::now()->addMinutes(30);
+        $isTomorrow = false;
+
+        while ($startTime <= $endTime) {
+            // Saat ve durum verisini ayarla
+            $hour = [
+                'saat' => $startTime->format('H:i'),
+                'durum' => in_array($startTime->format('H:i') . ':00', $reservations) ? 'dolu' : 'bos',
+                'fiyat' => $this->daytime_price,
+                'zaman' => $isTomorrow ? 'ertesi gun' : 'bugun',
+            ];
+
+            // Geçmiş saatleri belirle
+            if ($startTime < $currentDateTime) {
+                $hour['durum'] = 'gecmis';
             }
 
-            return $saat;
-        }, $availableHours);
+            // Günü değiştirirken 'ertesi gun' bilgisi ekle
+            if (!$isTomorrow && $startTime->format('H:i') === '00:00') {
+                $isTomorrow = true;
+                $hour['zaman'] = 'ertesi gun';
+            }
+
+            $availableHours[] = $hour;
+            $startTime->addHour();
+        }
 
         return json_encode($availableHours);
     }

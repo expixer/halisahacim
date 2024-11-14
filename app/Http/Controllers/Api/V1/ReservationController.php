@@ -79,7 +79,7 @@ class ReservationController extends Controller
             'date' => 'required|date',
         ]);
 
-        $stadium = Stadium::find($request->id);
+        $stadium = Stadium::query()->find($request->id);
 
         return $stadium->getAvailableHours($request->date);
     }
