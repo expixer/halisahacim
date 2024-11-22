@@ -18,6 +18,8 @@ Route::middleware(['cors', 'api'])->group(function () {
     Route::post('auth/register', Auth\RegisterController::class);
     Route::post('auth/login', Auth\LoginController::class);
     Route::get('cities', [V1\CityController::class, 'index']);
+    Route::post('apply-for-panel', [V1\EmailController::class, 'applyForPanel']);
+
     Route::get('cities/{city}', [V1\StateController::class, 'index']);
     Route::get('stadiums/search', [V1\StadiumSearchController::class, 'index']);
     Route::middleware(['auth:sanctum'])->group(function () {
