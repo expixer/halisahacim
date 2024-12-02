@@ -23,6 +23,10 @@ class User extends Authenticatable implements IMustVerifyMobile
     use TwoFactorAuthenticatable;
     use MustVerifyMobile;
 
+    public const ROLE_CUSTOMER = 'customer';
+
+    public const ROLE_FIELD_OWNER = 'field_owner';
+
     protected $fillable = [
         'name',
         'email',
@@ -35,6 +39,7 @@ class User extends Authenticatable implements IMustVerifyMobile
         'mobile_verify_code_sent_at',
         'city_id',
         'is_admin',
+        'role',
         'is_active',
     ];
 
@@ -51,6 +56,8 @@ class User extends Authenticatable implements IMustVerifyMobile
         'number_verified_at' => 'datetime',
         'mobile_verify_code_sent_at' => 'datetime',
         'mobile_last_attempt_date' => 'datetime',
+        'is_admin' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     protected $appends = [
