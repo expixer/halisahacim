@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class ReservationController extends Controller {
   public function reservations(Request $request) {
     $start_date = $request->start_date;
-    $end_date = $request->end_date;
+    $end_date = $request->end_date ?? date('Y-m-d', strtotime($start_date . ' + 6 days'));
     if ($request->has('date')) {
       $start_date = $request->date;
       $end_date = $request->date;
@@ -55,9 +55,8 @@ class ReservationController extends Controller {
 
   public function reservation_update(Request $request, $reservation) {
     $data = $request->validate([
-      'date'       => 'required|date',
-      'time'       => 'required|date_format:H:i',
-      'duration'   => 'required|integer|min:1|max:3',
+      'date'       => 'date',
+      'time'       => 'date_format:H:i',
       'price'      => 'numeric|min:0',
       'status'     => 'in:pending,approved,rejected,canceled',
     ]);
