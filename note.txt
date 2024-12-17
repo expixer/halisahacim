@@ -1,0 +1,1 @@
+Copy the bimacyap-cfefb-firebase-adminsdk-gr21d-687a540d7b.json file to the storage/app folder.

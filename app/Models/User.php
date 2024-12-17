@@ -23,9 +23,9 @@ class User extends Authenticatable implements IMustVerifyMobile
     use TwoFactorAuthenticatable;
     use MustVerifyMobile;
 
-    public const ROLE_CUSTOMER = 'customer';
+    public const string ROLE_CUSTOMER = 'customer';
 
-    public const ROLE_FIELD_OWNER = 'field_owner';
+    public const string ROLE_FIELD_OWNER = 'field_owner';
 
     protected $fillable = [
         'name',
@@ -41,6 +41,7 @@ class User extends Authenticatable implements IMustVerifyMobile
         'is_admin',
         'role',
         'is_active',
+        'fcm_token',
     ];
 
     protected $hidden = [
@@ -63,6 +64,16 @@ class User extends Authenticatable implements IMustVerifyMobile
     protected $appends = [
         'profile_photo_url',
     ];
+
+  /**
+   * Specifies the user's FCM token
+   *
+   * @return string|array
+   */
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
+    }
 
     public function routeNotificationForNetgsm()
     {
